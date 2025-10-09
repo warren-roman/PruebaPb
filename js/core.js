@@ -62,32 +62,11 @@ function isLabelOnRightSide(element) {
 
 const defaultTagName = "div";
 function _(tag, content) {
-    tag = typeof (tag) === "string" ? tag : defaultTagName;
-    var tagData = tag.split(".");
-    var tagName = tagData[0] ? tagData[0] : defaultTagName;
-    var result = document.createElement(tagName);
-    for (var classIndex = 1; classIndex < tagData.length; classIndex++) {
-        var className = tagData[classIndex];
-        if (classIndex = tagData.length - 1) {
-            var propertiesData = className.split(";");
-            className = className[0];
-            for (var propertyIndex = 1; propertyIndex < propertiesData.length; propertyIndex++) {
-                var propertyData = propertiesData[propertyIndex].split("=");
-                var name = propertyData[0];
-                var value = propertyData[1];
-                if (name === "text" || name === "textContent") result.innerText = value;
-                else if (name === "htm" || name === "html") result.innerHTML = value;
-                else if (result.tagName != "LABEL" && (name === "label" || name === "lbl")) result.labelElement = _("label", value);
-                else if (name == "value" && isInputElement(result)) result.setValue(value);
-                else result.setAttribute(name, value);
-            }
-        }
-        if (!className) continue;
-        result.classList.add(className);
-    }
-    for (var index = 1; index < arguments.length; index++) {
-        result._(arguments[index]);
-    }
+    var underlineHtml = parseUnderlineHtml(tag);
+    var result = document.createElement(underlineHtml.tag);
+    for (var className of underlineHtml.classList) { result.classList.add(className); }
+    result._(underlineHtml.properties);
+    for (var index = 1; index < arguments.length; index++) { result._(arguments[index]); }
     if (result.labelElement) {
         var id = null;
         if (!result.hasAttribute("id") && !result.hasAttribute("name")) {
@@ -102,7 +81,11 @@ function _(tag, content) {
     return result;
 }
 
-HTMLElement.prototype.__ = function (tag, content) { this._(_(tag, content)); }
+HTMLElement.prototype.__ = function (tag, content) {
+    content = [...arguments];
+    content.shift();
+    this._(_(tag, content));
+}
 HTMLElement.prototype._ = function (content) {
     var $this = this;
     for (let content of arguments) {
@@ -112,18 +95,53 @@ HTMLElement.prototype._ = function (content) {
             $this.appendChild(content);
         } else if (isPrimitive(content)) {
             if (isInputElement($this)) $this.setValue(content);
-            //else if ($this.tagName == "SELECT") console.log([...$this.childNodes]); // $this.selectedIndex = 9;
             else $this.innerHTML = content;
         } else if (typeof (content) === "object" && content) {
-            for (var key in content) {
-                var value = content[key];
-                if (typeof(value) === "function") $this.addEventListener(key, value);
-                else if (key == "value" && isInputElement($this)) $this.setValue(content);
-                else $this.setAttribute(key, value);
+            for (var name in content) {
+                var value = content[name];
+                if (name === "text" || name === "textContent") $this.innerText = value;
+                else if (name === "htm" || name === "html") $this.innerHTML = value;
+                else if ($this.tagName != "LABEL" && (name === "label" || name === "lbl")) $this.labelElement = _("label", value);
+                else if (typeof(value) === "function") $this.addEventListener(name, value);
+                else if (name == "value" && isInputElement($this)) $this.setValue(value);
+                else $this.setAttribute(name, value);
             }
         } else if (content === null) $this.innerHTML = "";
     }
     return $this;
 };
+
+
+function parseUnderlineHtml(texto) {
+    const result = {
+        tag: defaultTagName,
+        classList: [],
+        properties: {}
+    };
+
+    if (!texto) { return result; }
+
+    const parts = texto.split(';');
+    const tagAndClasses = parts[0];
+    const propertiesString = parts[1];
+
+    const tagAndClassesParts = tagAndClasses.split('.');
+    result.tag = tagAndClassesParts[0];
+    if (tagAndClassesParts.length > 1) {
+        result.classList = tagAndClassesParts.slice(1);
+    }
+
+    if (propertiesString) {
+        const propertyPairs = propertiesString.split('&');
+        propertyPairs.forEach(pair => {
+            const keyValue = pair.split(/=|:/); // using '=' and ':'
+            const key = keyValue[0];
+            const value = keyValue.length > 1 ? keyValue[1] : '';
+            result.properties[key] = value;
+        });
+    }
+
+    return result;
+}
 
 // EOF
