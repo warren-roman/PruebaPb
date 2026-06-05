@@ -1,3 +1,48 @@
+.pagearea { margin: 5px; container-name: page-area; container-type: inline-size; }
+
+/* Bolsillo (14 x 21 cm o A5): */
+@container page-area (max-width: 140mm) {
+  .pagebase {
+    --page-padding-top: 1.5cm;   /* 1.5cm - 2.0cm */
+    --page-padding-left: 1.5cm;  /* 2.0cm - 2.5cm */
+    --page-padding-right: 1.5cm; /* 1.5cm */
+    --page-padding-bottom: 2cm;  /* 2.0cm - 2.5cm */
+    --page-font-size: 10pt;
+  }
+}
+
+/* Estándar / Novela (15.24 x 22.86 cm o 6 x 9 pulgadas): */
+@container page-area (min-width: 140mm) {
+  .pagebase {
+    --page-padding-top: 2.0cm;    /* 2.0cm */
+    --page-padding-left: 1.5cm;   /* 2.0cm - 2.5cm */
+    --page-padding-right: 1.5cm;  /* 1.5cm */
+    --page-padding-bottom: 2.5cm; /* 2.5cm */
+    --page-font-size: 11pt;
+  }
+}
+
+/* Mediano / Técnico (17 x 24 cm): */
+@container page-area (min-width: 152mm) {
+  .pagebase {
+    --page-padding-top: 2.0cm;    /* 2.0cm */
+    --page-padding-left: 2.0cm;   /* 2.5cm - 3.0cm */
+    --page-padding-right: 2.0cm;  /* 1.5cm - 2.0cm */
+    --page-padding-bottom: 2.5cm; /* 2.5cm - 3.0cm */
+    --page-font-size: 12pt;
+  }
+}
+
+/*...  */
+@container page-area (min-width: 170mm) {
+  .pagebase {
+    --page-padding-top: 2.0cm;    /* 2.0cm */
+    --page-padding-left: 2.5cm;   /* 2.5cm - 3.0cm */
+    --page-padding-right: 2.5cm;  /* 1.5cm - 2.0cm */
+    --page-padding-bottom: 2.5cm; /* 2.5cm - 3.0cm */
+  }
+}
+
 .page3d {
     box-shadow: 2px 2px 2px 0 rgb(0 0 0 / 0.05), -2px -2px 2px 0 rgb(0 0 0 / 0.05),
         -2px 2px 2px 0 rgb(0 0 0 / 0.05), 2px -2px 2px 0 rgb(0 0 0 / 0.05);
@@ -10,7 +55,8 @@
     max-width: 216mm; /*216mm*/
     max-height: 279mm; /*279mm*/
     font-family: 'Times New Roman';
-    padding: 2cm 2.5cm 2.5cm;
+    padding: var(--page-padding-top) var(--page-padding-right) var(--page-padding-bottom) var(--page-padding-left);
+    font-size: var(--page-font-size);
 }
 
 .pagebase p {
