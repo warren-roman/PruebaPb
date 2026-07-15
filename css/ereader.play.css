@@ -1,0 +1,64 @@
+.play .pagebase {
+    font-family: Verdana, Geneva, sans-serif;
+    line-height: 1.5;
+}
+
+.play h1, .play h2, .play h3, .play h4, .play h5, .play h6 {
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: solid 1px rgb(209 213 219 / 1);
+}
+
+.play d, .play dicendi { display: none; }
+
+.play p:has(narr), .play p:has(act) {
+    font-style: italic;
+    text-align: justify;
+    padding-left: 1rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    margin-right: 10%;
+    margin-left: 10%;
+    
+}
+
+.play narr {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.play act::before { content: "["; }
+.play act::after { content: "]"; }
+
+.play act {
+    display: block;
+    text-align: center;
+}
+
+.play p[dline]::before { text-align: right; content: attr(dline); grid-column: span 3 / span 3; }
+
+.play p[dline] {
+    gap: 1rem;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    display: grid;
+}
+
+.play dpart {
+    grid-column: span 9 / span 9;
+    display: grid;
+    grid-template: "acot" "dial";
+}
+
+.play acot { display: block; grid-area: acot; font-style: italic; }
+.play dial { display: block; grid-area: dial; }
+.play acot::before { content: "("; }
+.play acot::after { content: ")"; }
+
+.play *[dline] dial { color: var(--player-color, transparent); }
