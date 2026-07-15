@@ -1,0 +1,69 @@
+
+.pagearea { margin: 5px; container-name: page-area; container-type: inline-size; }
+
+.page3d {
+    box-shadow: 2px 2px 2px 0 rgb(0 0 0 / 0.05), -2px -2px 2px 0 rgb(0 0 0 / 0.05),
+        -2px 2px 2px 0 rgb(0 0 0 / 0.05), 2px -2px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.pagebase {
+    background-color: white;
+    border: solid 1px rgb(206, 206, 206);
+    border-radius: 6px;
+    max-width: 216mm; /*216mm*/
+    max-height: 279mm; /*279mm*/
+    font-family: 'Times New Roman';
+    padding: var(--page-padding-top) var(--page-padding-right) var(--page-padding-bottom) var(--page-padding-left);
+    font-size: var(--page-font-size);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+
+/* Bolsillo (14 x 21 cm o A5): */
+@container page-area (max-width: calc(140mm)) { /* */
+  .pagebase {
+    --page-padding-top: 1.5cm;   /* 1.5cm - 2.0cm */
+    --page-padding-left: 1.5cm;  /* 2.0cm - 2.5cm */
+    --page-padding-right: 1.5cm; /* 1.5cm */
+    --page-padding-bottom: 2cm;  /* 2.0cm - 2.5cm */
+    --page-font-size: 10pt;
+
+    --page-text-area-width: calc(140mm - var(--page-padding-left) - var(--page-padding-right));
+    --page-padding-both: max(2rem, calc((100cqw - var(--page-text-area-width)) / 2));
+    padding: var(--page-padding-top) var(--page-padding-both) var(--page-padding-bottom) var(--page-padding-both);
+  }
+} /* */
+
+/* Estándar / Novela (15.24 x 22.86 cm o 6 x 9 pulgadas): */
+@container page-area (min-width: 140mm) {
+  .pagebase {
+    --page-padding-top: 2.0cm;    /* 2.0cm */
+    --page-padding-left: 1.5cm;   /* 2.0cm - 2.5cm */
+    --page-padding-right: 1.5cm;  /* 1.5cm */
+    --page-padding-bottom: 2.5cm; /* 2.5cm */
+    --page-font-size: 11pt;
+  }
+}
+
+/* Mediano / Técnico (17 x 24 cm): */
+@container page-area (min-width: 152mm) {
+  .pagebase {
+    --page-padding-top: 2.0cm;    /* 2.0cm */
+    --page-padding-left: 2.0cm;   /* 2.5cm - 3.0cm */
+    --page-padding-right: 2.0cm;  /* 1.5cm - 2.0cm */
+    --page-padding-bottom: 2.5cm; /* 2.5cm - 3.0cm */
+    --page-font-size: 12pt;
+  }
+}
+
+/* Grande / Maquina (21 x 27 cm): */
+@container page-area (min-width: 170mm) {
+  .pagebase {
+    --page-padding-top: 2.0cm;    /* 2.0cm */
+    --page-padding-left: 2.5cm;   /* 2.5cm - 3.0cm */
+    --page-padding-right: 2.5cm;  /* 1.5cm - 2.0cm */
+    --page-padding-bottom: 2.5cm; /* 2.5cm - 3.0cm */
+  }
+}
