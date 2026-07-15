@@ -1,71 +1,17 @@
-.pagearea { margin: 5px; container-name: page-area; container-type: inline-size; }
-
-/* Bolsillo (14 x 21 cm o A5): */
-@container page-area (max-width: 140mm) {
-  .pagebase {
-    --page-padding-top: 1.5cm;   /* 1.5cm - 2.0cm */
-    --page-padding-left: 1.5cm;  /* 2.0cm - 2.5cm */
-    --page-padding-right: 1.5cm; /* 1.5cm */
-    --page-padding-bottom: 2cm;  /* 2.0cm - 2.5cm */
-    --page-font-size: 10pt;
-  }
+.book .pagebase {
+  font-family: Georgia, Cambria, "Times New Roman", serif;
+  line-height: 1.625;
 }
 
-/* Estándar / Novela (15.24 x 22.86 cm o 6 x 9 pulgadas): */
-@container page-area (min-width: 140mm) {
-  .pagebase {
-    --page-padding-top: 2.0cm;    /* 2.0cm */
-    --page-padding-left: 1.5cm;   /* 2.0cm - 2.5cm */
-    --page-padding-right: 1.5cm;  /* 1.5cm */
-    --page-padding-bottom: 2.5cm; /* 2.5cm */
-    --page-font-size: 11pt;
-  }
-}
-
-/* Mediano / Técnico (17 x 24 cm): */
-@container page-area (min-width: 152mm) {
-  .pagebase {
-    --page-padding-top: 2.0cm;    /* 2.0cm */
-    --page-padding-left: 2.0cm;   /* 2.5cm - 3.0cm */
-    --page-padding-right: 2.0cm;  /* 1.5cm - 2.0cm */
-    --page-padding-bottom: 2.5cm; /* 2.5cm - 3.0cm */
-    --page-font-size: 12pt;
-  }
-}
-
-/*...  */
-@container page-area (min-width: 170mm) {
-  .pagebase {
-    --page-padding-top: 2.0cm;    /* 2.0cm */
-    --page-padding-left: 2.5cm;   /* 2.5cm - 3.0cm */
-    --page-padding-right: 2.5cm;  /* 1.5cm - 2.0cm */
-    --page-padding-bottom: 2.5cm; /* 2.5cm - 3.0cm */
-  }
-}
-
-.page3d {
-    box-shadow: 2px 2px 2px 0 rgb(0 0 0 / 0.05), -2px -2px 2px 0 rgb(0 0 0 / 0.05),
-        -2px 2px 2px 0 rgb(0 0 0 / 0.05), 2px -2px 2px 0 rgb(0 0 0 / 0.05);
-}
-
-.pagebase {
-    background-color: white;
-    border: solid 1px rgb(206, 206, 206);
-    border-radius: 6px;
-    max-width: 216mm; /*216mm*/
-    max-height: 279mm; /*279mm*/
-    font-family: 'Times New Roman';
-    padding: var(--page-padding-top) var(--page-padding-right) var(--page-padding-bottom) var(--page-padding-left);
-    font-size: var(--page-font-size);
-}
-
-.pagebase p {
+.book .pagebase p {
     text-indent: 1.25cm;
     text-align: justify;
 }
 
-.pagebase h1, .pagebase h2, .pagebase h3, .pagebase h4, .pagebase h5, .pagebase h6 {
+.book .pagebase h1,.book  .pagebase h2,.book  .pagebase h3,.book  .pagebase h4,.book  .pagebase h5,.book  .pagebase h6 {
     text-align: center;
     text-decoration: underline solid black 2px;
     margin-bottom: 8.5rem;
 }
+
+.book *[dline] dial { color: var(--player-color, transparent); font-weight: bolder; }
