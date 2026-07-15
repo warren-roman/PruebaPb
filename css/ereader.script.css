@@ -1,0 +1,61 @@
+.script .pagebase {
+    font-family: "Courier Prime", "Courier New", monospace;
+    line-height: 1.625;
+}
+
+.script h1, .script h2, .script h3, .script h4, .script h5, .script h6 {
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;    
+    text-decoration: underline solid black 2px;
+}
+
+.script d, .script dicendi { display: none; }
+
+.script p:has(narr), .script p:has(act) {
+    text-align: justify;
+    padding-left: 1rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    
+}
+
+.script narr {
+    display: block;
+    font-style: italic;
+    margin-bottom: 12px;
+}
+
+.script narr::before { content: "\""; }
+.script narr::after { content: "\""; }
+
+.script act {
+    display: block;
+}
+
+.script p[dline]::before { display: block; content: attr(dline); text-transform: uppercase; font-weight: 700; }
+
+.script p[dline] {
+    gap: 1rem;
+    text-align: center;
+}
+
+.script dpart {
+    display: grid;
+    grid-template: "acot" "dial";
+}
+
+.script acot { display: block; grid-area: acot; font-style: italic; }
+.script dial { display: block; grid-area: dial; }
+.script acot::before { content: "("; }
+.script acot::after { content: ")"; }
+.script dial::before { content: "\""; }
+.script dial::after { content: "\""; }
+
+.script *[dline] dial { color: var(--player-color, transparent); }
