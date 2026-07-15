@@ -1,4 +1,131 @@
-<style>
-  p { color: red }
-</style>
-<p>Content</p>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="ereader.css">
+    <link rel="stylesheet" href="ereader.script.css">
+    <link rel="stylesheet" href="ereader.book.css">
+    <link rel="stylesheet" href="ereader.play.css">
+    <link rel="stylesheet" href="ereader.chat.css">
+    <script src="random.js"></script>
+    <script src="ui.js"></script>
+    <title>TEXT TEST</title>
+    <style>
+      span:hover { background-color: lightpink; color: blueviolet; cursor: pointer; }
+    </style>
+    <script>
+window.addEventListener("DOMContentLoaded", () => {
+    var players = document.querySelectorAll("*[dline]");
+    var ptypes = {};
+    var ps = document.getElementById("players");
+    if (!ps) {
+      document.head.appendChild(ps = document.createElement("style"));
+      ps.setAttribute("id", "players");
+    }
+    console.log(players);
+    var ihtm = "";
+    for(var player of [...players]) {
+        var pname = player.getAttribute("dline");
+        if (ptypes[pname]) continue;
+        var h = generarNumero(pname, Math.random() * 9999, 0, 360);
+        var s = generarNumero(pname, Math.random() * 9999, 30, 180) / 100;
+        var l = generarNumero(pname, Math.random() * 9999, 30, 40);
+        ptypes[pname] = `.pagearea *[dline="${pname}"] { --player-color: oklch(${l}% ${s} ${h}) }\r\n`;
+        // + `.pagearea *[dline="${pname}"]::before { color: hsl(${h}, ${s}%, ${l}%) }\r\n`;
+        ihtm += ptypes[pname];
+    }
+    ps.innerHTML = ihtm;
+});
+    </script>
+</head>
+<body class="chat">
+  <header>
+    <div><button id="A" popovertarget="sidebar1"><i class="fa-solid text-lg fa-list"></i></button></div>
+    <span>Mi Encabezado </span>
+    <div>
+      <button id="C" popovertarget="sidebar3"><i class="fa-solid text-lg fa-cog"></i></button>
+      <button id="B" popovertarget="sidebar2"><i class="fa-solid text-lg fa-list"></i></button>
+    </div>
+  </header>
+  <aside id="sidebar1" popovermin><a>AAAAAAAA</a></aside>
+  <aside id="sidebar2" popovermin><a>BBBBBBBB</a></aside>
+  <aside id="sidebar3" popover>
+    
+    <div id="menu-right">
+        <h3>Ajustes Visuales</h3>
+        <div class="mb-6">
+            <label>Estilo de Vista</label>
+            <div class="grid grid-cols-2 gap-2">
+                <foreach item="a" data="types"><a>123</a></foreach>
+                <button onclick="setViewMode('script')"><span>📄​ Guion</span></button>
+                <button onclick="setViewMode('play')"><span>🎭​ Obra.</span></button>
+                <button onclick="setViewMode('book')"><span>​📖​ Libro</span></button>
+                <button onclick="setViewMode('chat')"><span>💬​ Chat.</span></button>
+            </div>
+        </div>
+        <div class="mb-8">
+            <label>Tema</label>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="setTheme('light')"><i></i>​🌞​ Día</button>
+                <button onclick="setTheme('dark')"><i></i>🌚 Noche</button>
+            </div>
+        </div>
+        <div class="mb-8">
+            <label>Acento</label>
+            <div class="grid grid-cols-4 gap-3">
+                <button onclick="setPalette('indigo')"></button>
+                <button onclick="setPalette('emerald')"></button>
+                <button onclick="setPalette('rose')"></button>
+                <button onclick="setPalette('amber')"></button>
+            </div>
+        </div>
+    </div>
+
+  </aside>
+  <main class="pagearea">
+      <div class="pagebase page3d">
+          <h2><span tts>Descaradamente emancipado.</span></h2>
+          <p dline="Mario">
+            <dpart>
+              <dial>
+                <d>—</d><span tts>¡Adrian!</span>
+                <span tts>¡Baja aquí de una vez!</span>
+              </dial> 
+              <acot>
+                <d>—</d><span tts><dicendi>Se escuchaba la voz de su padre </dicendi>desde la sala.</span>
+              </acot>
+            </dpart>
+          </p>
+          <p>
+            <narr>
+              <span tts>Adrian quería seguir holgazaneando en su habitación.</span>
+              <span tts>Navegar en internet hasta altas horas de la madrugada normalmente no evitaba que se levantara al día siguiente.</span>
+              <span tts>A no ser que hubiera escuela o que su familia lo buscara para alguna actividad matutina.</span>
+              <span tts>Esta ocasión parecía lo segundo y su mente se había puesto automáticamente en modo de fatiga inmediata.</span>
+            </narr>
+          </p>
+          <p dline="María">
+            <dpart>
+              <dial><d>»</d><span tts>¡Adrian!</span>
+                <span tts>¡Me voy a ir quitando el cinturón!</span>
+                <span tts>¡Si me haces subir te voy a dar una buena razón para no poder salir de tu cuarto!</span>
+              </dial>
+            </dpart>
+          </p>
+          <p>
+            <narr>
+              <span tts>Adrian recapacitó inmediatamente.</span>
+              <span tts>holgazanear no era tan indispensable.</span>
+              <span tts>podría descansar en otro momento.</span>
+            </narr>
+            <act>
+              <span tts>se apresuró a ponerse algo presentable y abrió la puerta del cuarto para hacer saber que ya estaba despierto.</span>
+              <span tts>Sin embargo, tardó un momento en calzarse unos tenis, poner a cargar su teléfono y peinarse antes de salir y bajar por las escaleras.</span>
+            </act>
+          </p>
+        </div>
+  </main>
+</body >
+</html >
