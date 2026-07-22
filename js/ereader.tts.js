@@ -50,7 +50,7 @@ function populateVoiceList() {
     }
     voicesInfo.isLoaded = true;
 
-    onVoicesLoaded();
+    onVoicesLoaded("voicesLoaded");
 }
 
 // Event listener para cuando las voces han sido cargadas o cambiadas
@@ -144,23 +144,29 @@ window.addEventListener("dblclick", (e) => {
     StartReadingElement(e.target);
 });
 
-window.addEventListener("DOMContentLoaded", onVoicesLoaded);
+window.addEventListener("DOMContentLoaded", () => onVoicesLoaded("domLoaded"));
 
-function onVoicesLoaded() {
-    if (!voicesInfo.isLoaded) {
-        console.log('fail loading voices');
-        return;
-    }
-    var voicesbox = [...document.querySelectorAll("*[voicesbox]")];
-    var voices = [...voicesInfo.voices];
-    voices.sort((a, b) => (b.localService ? 1 : 0) - (a.localService ? 1 : -1));
-    voices.sort((a, b) => (b.default ? 1 : 0) - (a.default ? 1 : -1));
-    for(var box of voicesbox) {
-        box.innerHTML = "";
-        for(var voice of voices) {
-            var pvoice = document.createElement("p");
-            pvoice.textContent = `${voice.default ? "☑️" : "❎" } ${voice.localService ? "💽" : "🌐"} [${voice.lang}] ${voice.name}`;
-            box.appendChild(pvoice);
+function onVoicesLoaded(altText) {
+    try {
+        if (!voicesInfo.isLoaded) {
+            return;
+        }
+        var voicesbox = [...document.querySelectorAll("*[voicesbox]")];
+        var voices = [...voicesInfo.voices];
+        voices.sort((a, b) => (b.localService ? 1 : 0) - (a.localService ? 1 : -1));
+        voices.sort((a, b) => (b.default ? 1 : 0) - (a.default ? 1 : -1));
+        for(var box of voicesbox) {
+            box.innerHTML = altText;
+            for(var voice of voices) {
+                var pvoice = document.createElement("p");
+                pvoice.textContent = `${voice.default ? "☑️" : "❎" } ${voice.localService ? "💽" : "🌐"} [${voice.lang}] ${voice.name}`;
+                box.appendChild(pvoice);
+            }
+        }
+    } catch(e) {
+        var voicesbox = [...document.querySelectorAll("*[voicesbox]")];
+        for(var box of voicesbox) {
+            box.innerHTML = JSON.stringify(e);
         }
     }
 }
