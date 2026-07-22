@@ -35,3 +35,22 @@ function setViewMode(mode) {
 }
 
 function setPalette(name) {}
+
+function showNotification(message, type = 'info') {
+  const container = document.getElementById('notification-container');
+  const notif = document.createElement('div');
+  notif.className = `notification ${type}`;
+  notif.innerText = message;
+
+  container?.appendChild(notif);
+
+  // Remove after 3 seconds
+  setTimeout(() => {
+    notif.classList.add('fade-out');
+    setTimeout(() => {
+      if (notif.parentNode) {
+        notif.parentNode.removeChild(notif);
+      }
+    }, 500); // Wait for transition
+  }, 3000);
+}
