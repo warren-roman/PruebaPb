@@ -67,25 +67,33 @@ function readText(textToRead, options) {
         return;
     }
 
-    if (!options?.forced && synth.speaking) synth.cancel();
+    try {
 
-    const selectedVoice = GetVoice(options);
+        if (!options?.forced && synth.speaking) synth.cancel();
 
-    if (!selectedVoice) {
-        options?.onerror({ Message: "No voice" });
-        return;
+        const selectedVoice = GetVoice(options);
+
+        if (!selectedVoice) {
+            options?.onerror({ Message: "No voice" });
+            return;
+        }
+        utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.voice = selectedVoice;
+        utterance.lang = selectedVoice.lang;
+        // Establecer las propiedades de la voz desde los controles
+        utterance.rate = options?.rate || 1.2;
+        utterance.pitch = options?.pitch || 1;
+        utterance.volume = options?.volume || 1;
+        utterance.onstart = options?.onstart || ((e) => { });
+        utterance.onend = options?.onend || ((e) => { });
+        utterance.onerror = options?.onerror || ((e) => { });
+        synth.speak(utterance);
+        
+    } catch (error) {
+        var errortxt = JSON.stringify(error);
+        showNotification(errortxt, 'error');
+        
     }
-    utterance = new SpeechSynthesisUtterance(textToRead);
-    utterance.voice = selectedVoice;
-    utterance.lang = selectedVoice.lang;
-    // Establecer las propiedades de la voz desde los controles
-    utterance.rate = options?.rate || 1.2;
-    utterance.pitch = options?.pitch || 1;
-    utterance.volume = options?.volume || 1;
-    utterance.onstart = options?.onstart || ((e) => { });
-    utterance.onend = options?.onend || ((e) => { });
-    utterance.onerror = options?.onerror || ((e) => { });
-    synth.speak(utterance);
 }
 
 // Event listener para el botón "Pausar"
@@ -136,12 +144,32 @@ function StartReadingElement(e) {
     });
 }
 
-window.addEventListener("dblclick", (e) => {
-    if(!e.target.hasAttribute("tts")) return;
+function StartReadingElementCallback(e) {
     var selectedItems = document.querySelectorAll(`*[${selectedAttribute}]`);
     for(var itm of [...selectedItems]) { itm.removeAttribute(selectedAttribute); }
-    e.target.setAttribute(selectedAttribute, "");
-    StartReadingElement(e.target);
+    e.setAttribute(selectedAttribute, "");
+    StartReadingElement(e);
+}
+
+let ultimoToque = 0;
+
+window.addEventListener('touchend', function(evento) {
+    if(!evento.target.hasAttribute("tts")) return;
+    const tiempoActual = new Date().getTime();
+    const tiempoTranscurrido = tiempoActual - ultimoToque;
+    
+    // Si el tiempo entre toques es menor a 300 ms, es un doble toque
+    if (tiempoTranscurrido < 300 && tiempoTranscurrido > 0) {
+        StartReadingElementCallback(evento.target);
+        evento.preventDefault(); 
+    }
+    
+    ultimoToque = tiempoActual;
+});
+
+window.addEventListener("dblclick", (e) => {
+    if(!e.target.hasAttribute("tts")) return;
+    StartReadingElementCallback(e.target);
 });
 
 window.addEventListener("DOMContentLoaded", () => onVoicesLoaded("domLoaded"));
