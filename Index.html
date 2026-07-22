@@ -13,6 +13,7 @@
     <script src="js/random.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/ereader.players.js"></script>
+    <script src="js/ereader.tts.js"></script>
     <title>TEXT TEST</title>
     <style> span:hover { background-color: lightpink; color: blueviolet; cursor: pointer; } </style>
     <script>window.addEventListener("DOMContentLoaded", () => { reloadPlayerColors(); });</script>
@@ -27,7 +28,7 @@
     </div>
   </header>
   <aside id="sidebar1" popovermin><a>AAAAAAAA</a></aside>
-  <aside id="sidebar2" popovermin><a>BBBBBBBB</a></aside>
+  <aside id="sidebar2" popovermin><div voicesbox style="font-size: 0.75rem; overflow-y: scroll; max-height: 400px;"></div></aside>
   <aside id="sidebar3" popover>
     
     <div id="menu-right">
