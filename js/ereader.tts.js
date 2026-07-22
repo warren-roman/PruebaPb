@@ -26,7 +26,7 @@ function populateVoiceList() {
     voicesInfo.voices = synth.getVoices().sort((a, b) => a.name.localeCompare(b.name));
 
     if (voicesInfo.voices.length === 0) {
-        //showMessage('No se encontraron voces de síntesis de voz en tu sistema.', 'warning');
+        showNotification('No se encontraron voces de síntesis de voz en tu sistema.', 'warning');
         return;
     }
     voicesInfo.isEmpty = false;
@@ -164,9 +164,11 @@ function onVoicesLoaded(altText) {
             }
         }
     } catch(e) {
+        var errortxt = JSON.stringify(e);
+        showNotification(errortxt, 'error');
         var voicesbox = [...document.querySelectorAll("*[voicesbox]")];
         for(var box of voicesbox) {
-            box.innerHTML = JSON.stringify(e);
+            box.innerHTML = errortxt;
         }
     }
 }
