@@ -13,33 +13,8 @@
     <script src="js/random.js"></script>
     <script src="js/ui.js"></script>
     <title>TEXT TEST</title>
-    <style>
-      span:hover { background-color: lightpink; color: blueviolet; cursor: pointer; }
-    </style>
-    <script>
-window.addEventListener("DOMContentLoaded", () => {
-    var players = document.querySelectorAll("*[dline]");
-    var ptypes = {};
-    var ps = document.getElementById("players");
-    if (!ps) {
-      document.head.appendChild(ps = document.createElement("style"));
-      ps.setAttribute("id", "players");
-    }
-    console.log(players);
-    var ihtm = "";
-    for(var player of [...players]) {
-        var pname = player.getAttribute("dline");
-        if (ptypes[pname]) continue;
-        var h = generarNumero(pname, Math.random() * 9999, 0, 360);
-        var s = generarNumero(pname, Math.random() * 9999, 30, 180) / 100;
-        var l = generarNumero(pname, Math.random() * 9999, 30, 40);
-        ptypes[pname] = `.pagearea *[dline="${pname}"] { --player-color: oklch(${l}% ${s} ${h}) }\r\n`;
-        // + `.pagearea *[dline="${pname}"]::before { color: hsl(${h}, ${s}%, ${l}%) }\r\n`;
-        ihtm += ptypes[pname];
-    }
-    ps.innerHTML = ihtm;
-});
-    </script>
+    <style> span:hover { background-color: lightpink; color: blueviolet; cursor: pointer; } </style>
+    <script>window.addEventListener("DOMContentLoaded", () => { reloadPlayerColors(); });</script>
 </head>
 <body class="chat">
   <header>
