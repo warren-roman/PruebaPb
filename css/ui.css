@@ -11,7 +11,7 @@ html, body {
 body {
     margin: 0;
     display: grid;
-    grid-template-areas: "header header header" "sidebar1 main sidebar2" "sidebar3 main sidebar4" "sidebar5 main sidebar6";
+    grid-template-areas: "message message message" "header header header" "sidebar1 main sidebar2" "sidebar3 main sidebar4" "sidebar5 main sidebar6";
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto auto auto 1fr;
     height: 100vh;
