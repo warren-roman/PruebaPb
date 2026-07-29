@@ -126,6 +126,15 @@ main {
   .notification.error {
     border-color: #ef4444;
   }
+  .notification.info {
+    border-color: #44d8ef;
+  }
+  .notification.warning {
+    border-color: #d2ef44;
+  }
+  .notification.ok,  .notification.success {
+    border-color: #66ef44;
+  }
 
   .notification.fade-out {
     opacity: 0;
