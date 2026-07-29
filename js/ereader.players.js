@@ -9,7 +9,6 @@ function reloadPlayerColors(hn, sn, ln) {
       document.head.appendChild(ps = document.createElement("style"));
       ps.setAttribute("id", "players");
     }
-    console.log(players);
     var ihtm = "";
     for(var player of [...players]) {
         var pname = player.getAttribute("dline");
