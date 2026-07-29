@@ -11,7 +11,7 @@ function GetVoice(data) {
     if (data instanceof SpeechSynthesisVoice) return data;
     if (data.voice instanceof SpeechSynthesisVoice) return data.voice;
     if (voicesInfo.name[data.voice]) return voicesInfo.name[data.voice];
-    var voice = voicesInfo.local[data.voice] || voicesInfo.country[data.voice] || voicesInfo.language[data.voice];
+    var voice = voicesInfo.language[data.voice] || voicesInfo.country[data.voice] || voicesInfo.local[data.voice];
     if (!voice) return voicesInfo.default;
     for(var i = 0; i < voice.length; i++) {
         if (data.preferOnline && !voice[i].localService) return voice[i];
@@ -38,7 +38,12 @@ function populateVoiceList() {
 
     for (let i = 0; i < voicesInfo.voices.length; i++) {
         var v = voicesInfo.voices[i];
-        if (v.default) voicesInfo.default = v;
+        if (v.default) {
+            if (!localStorage.getItem("selected-voice")) {
+                localStorage.setItem("selected-voice", v.name);
+            }
+            voicesInfo.default = v;
+        }
         var lang = v.lang.split("-");
         voicesInfo.local[v.lang] = voicesInfo.local[v.lang] || [];
         voicesInfo.local[v.lang].push(v);
@@ -50,7 +55,7 @@ function populateVoiceList() {
     }
     voicesInfo.isLoaded = true;
 
-    onVoicesLoaded("voicesLoaded");
+    onVoicesLoaded("Voices loaded completed by script but unbinded by device");
 }
 
 // Event listener para cuando las voces han sido cargadas o cambiadas
@@ -97,6 +102,20 @@ function readText(textToRead, options) {
 }
 
 // Event listener para el botón "Pausar"
+function pauseResumeSynth() {
+    if (synth.speaking) {
+        if (synth.paused) {
+            synth.resume();
+        } else {
+            synth.pause();
+        }
+    } else {
+        var e = GetSelected();
+        if (e) StartReadingElement(e);
+    }
+}
+
+// Event listener para el botón "Pausar"
 function pauseSynth() {
     if (synth.speaking && !synth.paused) {
         synth.pause();
@@ -122,11 +141,20 @@ function GetSelected() {
     return selectedItem;
 }
 
-function SelectNext() {
+function MoveNext(step = 1) {
+    var newE = SelectNext(step)
+    if (synth.speaking) {
+        synth.cancel();
+        StartReadingElement(newE);
+    }
+    return newE;
+}
+
+function SelectNext(step = 1) {
     var selectableItems = [...document.querySelectorAll("*[tts]")];
     var selected = GetSelected();
     selected.removeAttribute(selectedAttribute);
-    var index = selectableItems.indexOf(selected) + 1;
+    var index = selectableItems.indexOf(selected) + step;
     selected = selectableItems[index];
     if (!selected) return selected;
     selected.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -136,7 +164,10 @@ function SelectNext() {
 
 function StartReadingElement(e) {
     readText(e.textContent, {
-        voice: "es",
+        voice: localStorage.getItem("selected-voice") || "es",
+        rate: localStorage.getItem("selected-rate") || undefined,
+        pitch: localStorage.getItem("selected-pitch") || undefined,
+        volume: localStorage.getItem("selected-vol") || undefined,
         onend: (sse) => {
             var next = SelectNext();
             if (next) StartReadingElement(next);
@@ -144,11 +175,11 @@ function StartReadingElement(e) {
     });
 }
 
-function StartReadingElementCallback(e) {
+function StartReadingElementCallback(e, startReading = true) {
     var selectedItems = document.querySelectorAll(`*[${selectedAttribute}]`);
     for(var itm of [...selectedItems]) { itm.removeAttribute(selectedAttribute); }
     e.setAttribute(selectedAttribute, "");
-    StartReadingElement(e);
+    if (startReading) StartReadingElement(e);
 }
 
 let ultimoToque = 0;
@@ -160,7 +191,7 @@ window.addEventListener('touchend', function(evento) {
     
     // Si el tiempo entre toques es menor a 300 ms, es un doble toque
     if (tiempoTranscurrido < 300 && tiempoTranscurrido > 0) {
-        StartReadingElementCallback(evento.target);
+        StartReadingElementCallback(evento.target, false);
         evento.preventDefault(); 
     }
     
@@ -172,22 +203,63 @@ window.addEventListener("dblclick", (e) => {
     StartReadingElementCallback(e.target);
 });
 
-window.addEventListener("DOMContentLoaded", () => onVoicesLoaded("domLoaded"));
+window.addEventListener("DOMContentLoaded", () => onVoicesLoaded("Dom loaded but voices not loaded by device"));
 
 function onVoicesLoaded(altText) {
     try {
         if (!voicesInfo.isLoaded) {
+            showNotification(altText, 'warning');
             return;
         }
         var voicesbox = [...document.querySelectorAll("*[voicesbox]")];
         var voices = [...voicesInfo.voices];
         voices.sort((a, b) => (b.localService ? 1 : 0) - (a.localService ? 1 : -1));
         voices.sort((a, b) => (b.default ? 1 : 0) - (a.default ? 1 : -1));
+        var storagedVoice = localStorage.getItem("selected-voice");
         for(var box of voicesbox) {
-            box.innerHTML = altText;
+            box.innerHTML = "";
+            var btn = document.createElement("button");
+            btn.textContent = "Load voices";
+            btn.addEventListener("click", () => {
+                onVoicesLoaded("Manual voices loading requested but not loaded by device")
+            });
+            box.appendChild(btn);
+
+            for (var t of [{ n: "rate", d: 1.4, t: 2}, { n: "pitch", d: 1, t: 2 }, { n: "vol", d: 1, t: 1 }]) {
+                var slider = document.createElement("input");
+                var lbl = document.createElement("label");
+                slider.spn = document.createElement("span");
+                lbl.setAttribute( "for", slider.id = "storaged-" + t.n);
+                t.d = localStorage.getItem("selected-" + t.n) || t.d;
+                slider.t = t;
+                slider.addEventListener('input', (event) => {
+                    event.target.spn.textContent = event.target.value;
+                    var value = (event.target.value / 100 * event.target.t.t).toFixed(2);
+                    localStorage.setItem("selected-" + event.target.t.n, value);
+                });
+                lbl.textContent = t.n;
+                slider.setAttribute("type", "range");
+                slider.setAttribute("min", "0");
+                slider.setAttribute("max", "100");
+                slider.setAttribute("value", slider.spn.textContent = (t.d / t.t * 100).toFixed(0));
+                slider.setAttribute("step", "1");
+                box.appendChild(document.createElement("br"));
+                box.appendChild(lbl);
+                box.appendChild(slider);
+                box.appendChild(slider.spn);
+            }
             for(var voice of voices) {
                 var pvoice = document.createElement("p");
-                pvoice.textContent = `${voice.default ? "☑️" : "❎" } ${voice.localService ? "💽" : "🌐"} [${voice.lang}] ${voice.name}`;
+                var svoice = document.createElement("span");
+                var option = document.createElement("input");
+                option.type = "radio";
+                option.name = "voice";
+                option.voice = voice;
+                option.addEventListener("change", (e) => { localStorage.setItem("selected-voice", e.target.voice.name); });
+                if ((storagedVoice && storagedVoice == voice.name) || voice.default) option.checked = true;
+                svoice.textContent = `${voice.localService ? "💽" : "🌐"} [${voice.lang}] ${voice.name}`;
+                pvoice.appendChild(option);
+                pvoice.appendChild(svoice);
                 box.appendChild(pvoice);
             }
         }
