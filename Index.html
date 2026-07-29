@@ -15,7 +15,10 @@
     <script src="js/ereader.players.js"></script>
     <script src="js/ereader.tts.js"></script>
     <title>TEXT TEST</title>
-    <style> span:hover { background-color: lightpink; color: blueviolet; cursor: pointer; } </style>
+    <style>
+      .pagearea span:hover { background-color: lightpink; color: blueviolet; cursor: pointer; }
+      .pagearea span[selected] { background-color: blueviolet; color: brown; }
+    </style>
     <script>window.addEventListener("DOMContentLoaded", () => { reloadPlayerColors(); });</script>
 </head>
 <body class="chat">
@@ -27,7 +30,12 @@
       <button id="B" popovertarget="sidebar2"><i class="fa-solid text-lg fa-list"></i></button>
     </div>
   </header>
-  <aside id="sidebar1" popovermin><a>AAAAAAAA</a></aside>
+  <aside id="sidebar1" popovermin>
+    <button onclick="MoveNext(-1)">⏮️</button>
+    <button onclick="pauseResumeSynth()">⏯️</button><!-- ▶️ ⏸️ -->
+    <button onclick="stopSynth()">⏹️</button>
+    <button onclick="MoveNext(1)">⏭️</button>
+  </aside>
   <aside id="sidebar2" popovermin><div voicesbox style="font-size: 0.75rem; overflow-y: scroll; max-height: 400px;"></div></aside>
   <aside id="sidebar3" popover>
     
@@ -36,7 +44,6 @@
         <div class="mb-6">
             <label>Estilo de Vista</label>
             <div class="grid grid-cols-2 gap-2">
-                <foreach item="a" data="types"><a>123</a></foreach>
                 <button onclick="setViewMode('script')"><span>📄​ Guion</span></button>
                 <button onclick="setViewMode('play')"><span>🎭​ Obra.</span></button>
                 <button onclick="setViewMode('book')"><span>​📖​ Libro</span></button>
